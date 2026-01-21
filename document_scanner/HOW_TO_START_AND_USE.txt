@@ -1,0 +1,420 @@
+================================================================================
+          AUTOMATIC DOCUMENT SCANNER - HOW TO START AND USE GUIDE
+================================================================================
+
+TABLE OF CONTENTS
+-----------------
+1. Quick Start
+2. Installation
+3. Camera Setup
+4. Usage Modes
+5. Controls & Features
+6. Best Practices
+7. Troubleshooting
+
+
+================================================================================
+1. QUICK START
+================================================================================
+
+The fastest way to start scanning:
+
+Step 1: Install Requirements
+   cd document_scanner
+   pip install -r requirements.txt
+
+Step 2: Launch Scanner
+   ./live_scan.sh
+   
+   OR
+   
+   ./run.sh
+
+Step 3: Use Controls
+   SPACE - Capture document when "PERFECT" status shows
+   Q     - Quit scanner
+
+
+================================================================================
+2. INSTALLATION
+================================================================================
+
+Requirements:
+- Python 3.7 or higher
+- Mobile phone camera (iPhone or Android)
+- macOS (for iPhone Continuity Camera) or any OS with camera app support
+
+Install Python Dependencies:
+   pip install opencv-python numpy imutils
+
+Or use the requirements file:
+   pip install -r requirements.txt
+
+
+================================================================================
+3. CAMERA SETUP
+================================================================================
+
+NOTE: This scanner REQUIRES a mobile phone camera. Laptop cameras are disabled
+for quality reasons.
+
+------------------------
+iPhone Setup (macOS Only)
+------------------------
+
+Option A: Continuity Camera (Recommended - iOS 16+, macOS Ventura+)
+   1. Sign in with same Apple ID on both iPhone and Mac
+   2. Enable WiFi and Bluetooth on both devices
+   3. Keep iPhone near Mac
+   4. iPhone appears automatically as "Camera 1"
+   5. No additional apps needed!
+
+Option B: Third-Party Apps
+   EpocCam:
+   1. Install EpocCam on iPhone (App Store)
+   2. Install EpocCam Drivers on Mac from https://www.elgato.com/epoccam
+   3. Connect via USB or WiFi
+   4. Launch EpocCam app on iPhone
+   
+   iVCam:
+   1. Install iVCam on iPhone (App Store)
+   2. Install iVCam on Mac from https://www.e2esoft.com/ivcam/
+   3. Connect via USB or WiFi
+   4. Launch iVCam app on iPhone
+
+------------------------
+Android Setup
+------------------------
+
+Option A: DroidCam (Recommended)
+   1. Install DroidCam from Google Play Store
+   2. Download DroidCam Client from https://www.dev47apps.com/droidcam/macos/
+   3. Launch DroidCam on phone and note the IP address
+   4. Launch DroidCam Client on computer and enter IP
+   5. Click "Start"
+   
+   For USB (Better Quality):
+   - Enable USB Debugging on Android
+   - Connect phone via USB
+   - Select "USB" mode in DroidCam Client
+
+Option B: IP Webcam
+   1. Install IP Webcam from Google Play Store
+   2. Launch IP Webcam and tap "Start Server"
+   3. Note the URL (e.g., http://192.168.1.100:8080)
+   4. Use OBS Studio or browser to view stream
+
+
+================================================================================
+4. USAGE MODES
+================================================================================
+
+MODE 1: Live Camera Scanning (Real-Time)
+----------------------------------------
+Best for: Quick scans, multiple documents
+
+Command:
+   ./live_scan.sh
+   OR
+   cd src
+   python phone_camera_guide.py
+
+Features:
+- Real-time document detection
+- Movement/stability tracking
+- Visual guidance overlay
+- Auto-capture when stable
+
+How it works:
+1. Position document on dark surface
+2. Hold phone 30-40cm above document
+3. Wait for green "PERFECT - PRESS SPACE" status
+4. Press SPACE to capture
+5. Scanner automatically saves to output/ folder
+
+
+MODE 2: GUI Mode (Graphical Interface)
+---------------------------------------
+Best for: Beginners, visual interface preferred
+
+Command:
+   ./run.sh
+   OR
+   python scanner_gui.py
+
+Features:
+- Button-based interface
+- Camera preview window
+- Multiple enhancement options
+- Easy file selection
+
+
+MODE 3: CLI Mode (Command Line)
+--------------------------------
+Best for: Batch processing, automation
+
+Command:
+   cd src
+   python scanner_app.py <image_file>
+   
+Example:
+   python scanner_app.py ../samples/sample.jpg
+   python scanner_app.py photo.jpg
+
+Features:
+- Process single images
+- Multiple output formats
+- Fast processing
+
+
+MODE 4: Photo Mode (Recommended for Beginners)
+-----------------------------------------------
+Best for: No camera setup hassles, best quality control
+
+Steps:
+1. Take photo with phone's camera app
+2. Transfer to computer (AirDrop, USB, cloud)
+3. Run: python scanner_app.py photo.jpg
+
+Benefits:
+- No camera app setup needed
+- Review photos before scanning
+- Works with any phone
+- Can batch process multiple photos
+
+
+================================================================================
+5. CONTROLS & FEATURES
+================================================================================
+
+------------------------
+Live Scanner Controls
+------------------------
+SPACE - Capture document when status is "PERFECT"
+Q     - Quit and exit scanner
+
+------------------------
+Visual Feedback
+------------------------
+The scanner shows:
+
+Status Indicators:
+   YELLOW "POSITION DOCUMENT"        - No document detected
+   BLUE   "HOLD STEADY"              - Document found but moving
+   GREEN  "PERFECT - PRESS SPACE"    - Stable and ready to capture
+
+Overlays:
+   - Center Crosshair: Helps align camera
+   - Target Rectangle: Shows optimal document area
+   - Movement Tracker: Shows pixel movement in real-time
+
+Movement Display:
+   "Steady!" (Green)        - Less than 10px movement
+   "Small movement" (Yellow) - 10-20px movement
+   "Too much movement" (Red) - More than 20px movement
+
+Stability Requirement:
+   - Scanner requires 5 stable frames before allowing capture
+   - Keeps frames steady (< 10px movement)
+
+------------------------
+Detection Engine
+------------------------
+The scanner uses 6 detection strategies:
+1. Canny Edge Detection (3 variants)
+2. Morphological Operations
+3. Sobel Edge Detection
+4. Adaptive Thresholding
+5. Color-Based Detection (LAB color space)
+6. Contour Analysis (50 candidates per frame)
+
+Features:
+- Relaxed angle tolerance (30-150 degrees) for tilted documents
+- Handles challenging images (patterns, low contrast, shadows)
+- Automatic perspective correction
+
+------------------------
+Enhancement Modes
+------------------------
+After scanning, choose enhancement:
+1. Original Color      - No processing
+2. Enhanced Color      - Brightness/contrast boost
+3. Black & White (Adaptive) - Best for handwritten notes
+4. Black & White (Otsu)     - Sharp printed text
+
+
+================================================================================
+6. BEST PRACTICES
+================================================================================
+
+Optimal Camera Position:
+------------------------
+        [Phone Camera]
+             |
+             | 30-40cm (12-16 inches)
+             v
+      +---------------+
+      |   Document    |  <-- On dark surface
+      +---------------+
+
+Tips for Best Results:
+----------------------
+Background:
+   - Use dark cloth or paper under document
+   - Creates strong contrast for edge detection
+   - Black, dark blue, or dark green work best
+
+Lighting:
+   - Even, bright light from above
+   - Avoid direct shadows on document
+   - Natural light works great
+   - Avoid glare on glossy documents
+
+Camera Angle:
+   - Hold phone DIRECTLY above document (90 degrees)
+   - Keep phone parallel to document surface
+   - Don't tilt or angle the phone
+   - Center document in frame
+
+Document Placement:
+   - Place document flat on surface
+   - Smooth out wrinkles or folds
+   - Keep entire document in camera view
+   - Leave small margin around edges
+
+Stability:
+   - Keep camera steady for 2-3 seconds
+   - Rest phone on something if hand is shaky
+   - Wait for "PERFECT" status before capturing
+   - Breathe slowly to minimize movement
+
+
+================================================================================
+7. TROUBLESHOOTING
+================================================================================
+
+Problem: Camera Not Detected
+----------------------------
+Solution 1: Check Connection
+   - iPhone: Verify WiFi & Bluetooth enabled on both devices
+   - Android: Ensure same WiFi network
+   - Check cable connection if using USB
+
+Solution 2: Restart Camera App
+   - Close camera app on phone
+   - Restart scanner on computer
+   - Relaunch camera app on phone
+
+Solution 3: Check Firewall
+   - Allow camera apps through firewall
+   - macOS: System Settings -> Network -> Firewall
+
+
+Problem: Document Not Detected
+-------------------------------
+Solution 1: Improve Background Contrast
+   - Place document on dark surface
+   - Remove clutter around document
+   - Ensure document has clear edges
+
+Solution 2: Adjust Lighting
+   - Add more light to scene
+   - Remove shadows on document
+   - Avoid backlighting
+
+Solution 3: Change Camera Position
+   - Move camera closer (but not too close)
+   - Ensure entire document is in frame
+   - Keep camera parallel to document
+
+
+Problem: "Too Much Movement" Warning
+-------------------------------------
+Solution:
+   - Hold camera more steady
+   - Rest arms on table or surface
+   - Take deep breaths
+   - Wait 2-3 seconds before pressing SPACE
+
+
+Problem: Scanner Shows "Using Camera 0"
+----------------------------------------
+Solution:
+   - This means laptop camera is being used (not allowed)
+   - Phone camera not detected
+   - Follow camera setup instructions above
+   - Restart scanner after phone camera connected
+
+
+Problem: Poor Scan Quality
+---------------------------
+Solution 1: Use Photo Mode Instead
+   - Take photo with phone's native camera app
+   - Transfer to computer
+   - Process with: python scanner_app.py photo.jpg
+
+Solution 2: Improve Lighting
+   - Add more even lighting
+   - Remove shadows
+   - Use natural daylight if possible
+
+Solution 3: Try Different Enhancement
+   - Choose different enhancement mode
+   - Black & White modes often work better
+   - Enhanced Color for color documents
+
+
+Problem: Output File Not Found
+-------------------------------
+Solution:
+   - Check output/ folder in document_scanner directory
+   - Files named: scanned_YYYYMMDD_HHMMSS.jpg
+   - Ensure scanner completed successfully (no errors)
+
+
+================================================================================
+PROJECT STRUCTURE
+================================================================================
+
+document_scanner/
+├── src/
+│   ├── document_detector.py      # Detection engine (6 strategies)
+│   ├── perspective_corrector.py  # 4-point transform & enhancement
+│   ├── scanner_app.py            # Main CLI application
+│   ├── phone_camera_guide.py     # Live camera scanner
+│   ├── best_scanner.py           # Alternative scanner
+│   └── simple_detector.py        # Simple detection mode
+├── samples/                       # Input test images
+├── output/                        # Scanned output documents
+├── live_scan.sh                   # Quick launch script
+├── run.sh                         # GUI launch script
+├── scanner_gui.py                 # GUI application
+└── requirements.txt               # Python dependencies
+
+
+================================================================================
+SUPPORT & INFORMATION
+================================================================================
+
+Output Location:
+   All scanned documents are saved to: document_scanner/output/
+
+File Naming:
+   scanned_YYYYMMDD_HHMMSS.jpg
+   Example: scanned_20260121_143022.jpg
+
+Supported Input Formats:
+   .jpg, .jpeg, .png, .bmp, .tiff
+
+Output Format:
+   High-quality JPEG (quality: 95)
+
+Camera Requirements:
+   - Minimum resolution: 720p
+   - Recommended: 1080p or higher
+   - Mobile phone camera (laptop cameras disabled)
+
+
+================================================================================
+                              END OF GUIDE
+================================================================================
