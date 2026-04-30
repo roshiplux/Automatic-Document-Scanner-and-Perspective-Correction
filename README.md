@@ -49,7 +49,8 @@ Scanned documents are saved to `output/` folder in high-quality JPEG format.
 
 MIT License
 
-## Author
+## Authors
 
 Dahami Dissanayake
+Roshitha Priyadarshana
 
