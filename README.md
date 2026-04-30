@@ -51,6 +51,7 @@ MIT License
 
 ## Authors
 
-Dahami Dissanayake
+Dahami Dissanayake,
+
 Roshitha Priyadarshana
 
