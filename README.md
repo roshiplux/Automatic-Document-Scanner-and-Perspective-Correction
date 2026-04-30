@@ -51,4 +51,5 @@ MIT License
 
 ## Author
 
-[Your Name]
+Dahami Dissanayake
+
